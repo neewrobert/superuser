@@ -9,72 +9,107 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class User implements Serializable{
-	
+public class User implements Serializable {
+
 	/**
-	 * 
+	 * Class that represents an User
 	 */
 	private static final long serialVersionUID = -3143796405586221413L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	private String name;
 	private LocalDate birthDate;
 	private Profile profile;
-	
-	
-	
+	private Address address;
+	private String phoneNumber;
+
 	/**
 	 * @return the id
 	 */
 	public Long getId() {
 		return id;
 	}
+
 	/**
 	 * @param id the id to set
 	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	/**
 	 * @return the name
 	 */
 	public String getName() {
 		return name;
 	}
+
 	/**
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	/**
 	 * @return the birthDate
 	 */
 	public LocalDate getBirthDate() {
 		return birthDate;
 	}
+
 	/**
 	 * @param birthDate the birthDate to set
 	 */
 	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
+
 	/**
 	 * @return the profile
 	 */
 	public Profile getProfile() {
 		return profile;
 	}
+
 	/**
 	 * @param profile the profile to set
 	 */
 	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
-	
+
+	/**
+	 * @return the address
+	 */
+	public Address getAddress() {
+		return address;
+	}
+
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	/**
+	 * @return the phoneNumber
+	 */
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	/**
+	 * @param phoneNumber the phoneNumber to set
+	 */
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -84,6 +119,7 @@ public class User implements Serializable{
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -108,9 +144,5 @@ public class User implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
-	
-	
 
 }
