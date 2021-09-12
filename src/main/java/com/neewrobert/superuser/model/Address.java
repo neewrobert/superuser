@@ -1,17 +1,27 @@
 package com.neewrobert.superuser.model;
 
+import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Address {
+public class Address implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6365771463294560228L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
 	private String streetName;
+	private int streetNumber;
 	private String zipCode;
 	private String state;
 	private String city;
@@ -43,6 +53,20 @@ public class Address {
 	 */
 	public void setStreetName(String streetName) {
 		this.streetName = streetName;
+	}
+
+	/**
+	 * @return the streetNumber
+	 */
+	public int getStreetNumber() {
+		return streetNumber;
+	}
+
+	/**
+	 * @param streetNumber the streetNumber to set
+	 */
+	public void setStreetNumber(int streetNumber) {
+		this.streetNumber = streetNumber;
 	}
 
 	/**
@@ -106,14 +130,12 @@ public class Address {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
+		result = prime * result + streetNumber;
 		result = prime * result + ((zipCode == null) ? 0 : zipCode.hashCode());
 		return result;
 	}
 
 	@Override
-	/**
-	 * will be considered the equals if both have the same zip code and country
-	 */
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -125,6 +147,8 @@ public class Address {
 				return false;
 		} else if (!country.equals(other.country))
 			return false;
+		if (streetNumber != other.streetNumber)
+			return false;
 		if (zipCode == null) {
 			if (other.zipCode != null)
 				return false;
@@ -132,7 +156,5 @@ public class Address {
 			return false;
 		return true;
 	}
-	
-	
 
 }
