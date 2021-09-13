@@ -6,8 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames =  "profileType"))
 public class Profile implements Serializable{
 
 	/**
@@ -44,7 +47,7 @@ public class Profile implements Serializable{
 	 * @param profileType the profileType to set
 	 */
 	public void setProfileType(String profileType) {
-		this.profileType = profileType;
+		this.profileType = profileType.toLowerCase();
 	}
 
 	@Override

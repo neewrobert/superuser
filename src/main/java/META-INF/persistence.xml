@@ -8,7 +8,6 @@
 
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		
-		<class>com.neewrobert.superuser.model.Address</class>
 		<class>com.neewrobert.superuser.model.Profile</class>
 		<class>com.neewrobert.superuser.model.User</class>
 		
