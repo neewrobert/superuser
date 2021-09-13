@@ -1,15 +1,12 @@
-package com.neewrobert.superuser.model;
+package com.neewrobert.superuser.dto;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -19,65 +16,62 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-@Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames =  "email"))
-public class User implements Serializable {
+public class UserDTO implements Serializable{
 
 	/**
-	 * Class that represents an User
+	 * 
 	 */
-	private static final long serialVersionUID = -3143796405586221413L;
+	private static final long serialVersionUID = -1307634754249026896L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@NotBlank
 	private String name;
-	
+
+	@Past
+	@NotNull
 	@JsonFormat(pattern =  "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
-	@DateTimeFormat(pattern = "yyyy-MM-dd", iso = ISO.DATE)
+	@JsonDeserialize(using = LocalDateDeserializer.class, as = LocalDate.class)
+	@JsonSerialize(using = LocalDateSerializer.class, as = LocalDate.class)
 	private LocalDate birthDate;
+	
+	private String profileType;
 
-	@JoinColumn(name = "profile_id")
-	private Profile profile;
-
+	@NotBlank
 	private String phoneNumber;
-	
+
+	@NotBlank
+	@Email
 	private String email;
-	
-	
 
 	/**
 	 * @param name
 	 * @param birthDate
-	 * @param profile
+	 * @param profileType
 	 * @param phoneNumber
 	 * @param email
 	 */
-	public User(String name, LocalDate birthDate, Profile profile, String phoneNumber, String email) {
+	public UserDTO(@NotBlank String name, @NotBlank @Past LocalDate birthDate, String profileType,
+			@NotBlank String phoneNumber, @NotBlank @Email String email) {
 		this.name = name;
 		this.birthDate = birthDate;
-		this.profile = profile;
+		this.profileType = profileType;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 	}
 	
-	/**
-	 * @param name
-	 * @param birthDate
-	 * @param phoneNumber
-	 * @param email
-	 */
-	public User(String name, LocalDate birthDate, String phoneNumber, String email) {
-		this.name = name;
-		this.birthDate = birthDate;
-		this.phoneNumber = phoneNumber;
-		this.email = email;
+	public String toJson() {
+		Gson gson = new GsonBuilder().create();
+		return gson.toJson(this);
 	}
-	
 
-	public User() {
+	/**
+	 * 
+	 */
+	public UserDTO() {
 	}
 
 	/**
@@ -123,17 +117,17 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * @return the profile
+	 * @return the profileType
 	 */
-	public Profile getProfile() {
-		return profile;
+	public String getProfileType() {
+		return profileType;
 	}
 
 	/**
-	 * @param profile the profile to set
+	 * @param profileType the profileType to set
 	 */
-	public void setProfile(Profile profile) {
-		this.profile = profile;
+	public void setProfileType(String profileType) {
+		this.profileType = profileType;
 	}
 
 	/**
@@ -163,7 +157,5 @@ public class User implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	
 
 }
