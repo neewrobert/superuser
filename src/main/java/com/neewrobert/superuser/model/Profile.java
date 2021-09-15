@@ -1,26 +1,35 @@
 package com.neewrobert.superuser.model;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames =  "profileType"))
-public class Profile implements Serializable{
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "profileType"))
+public class Profile implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4455266067032586151L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(updatable=true)
 	private String profileType;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<User> users;
 
 	/**
 	 * @return the id
@@ -28,7 +37,6 @@ public class Profile implements Serializable{
 	public Long getId() {
 		return id;
 	}
-
 	/**
 	 * @param id the id to set
 	 */
@@ -48,6 +56,20 @@ public class Profile implements Serializable{
 	 */
 	public void setProfileType(String profileType) {
 		this.profileType = profileType.toLowerCase();
+	}
+
+	/**
+	 * @return the users
+	 */
+	public List<User> getUsers() {
+		return users;
+	}
+
+	/**
+	 * @param users the users to set
+	 */
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 
 	@Override
@@ -79,5 +101,4 @@ public class Profile implements Serializable{
 		return true;
 	}
 
-	
 }

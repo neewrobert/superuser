@@ -27,7 +27,7 @@ public class UserDTOTest {
 		
 		assertEquals(dto.getName(), entity.getName());
 		assertEquals(dto.getBirthDate(), entity.getBirthDate());
-		assertEquals(dto.getProfileType(), entity.getProfile().getProfileType());
+		assertEquals(dto.getProfile().getProfileType(), entity.getProfile().getProfileType());
 		assertEquals(dto.getPhoneNumber(), entity.getPhoneNumber());
 		assertEquals(dto.getEmail(), entity.getEmail());
 		
@@ -38,13 +38,13 @@ public class UserDTOTest {
 		
 		Profile profile = new Profile();
 		profile.setProfileType("manager");
-		UserDTO dto = new UserDTO("John Doe", LocalDate.of(1991, 07, 28), profile.getProfileType(), "987411289", "johndoe@gmail.com");
+		UserDTO dto = new UserDTO("John Doe", LocalDate.of(1991, 07, 28), new ProfileDTO( "manager"), "987411289", "johndoe@gmail.com");
 		
 		User entity = modelMapper.map(dto, User.class);
 		
 		assertEquals(entity.getName(), dto.getName());
 		assertEquals(entity.getBirthDate(), dto.getBirthDate());
-		assertEquals(entity.getProfile().getProfileType(), dto.getProfileType());
+		assertEquals(entity.getProfile().getProfileType(), dto.getProfile().getProfileType());
 		assertEquals(entity.getPhoneNumber(), dto.getPhoneNumber());
 		assertEquals(entity.getEmail(), dto.getEmail());
 		

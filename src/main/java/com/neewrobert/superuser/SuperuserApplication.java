@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -18,7 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @ComponentScan("com.neewrobert.superuser")
 @EnableSwagger2
-public class SuperuserApplication extends WebMvcConfigurationSupport{
+public class SuperuserApplication implements WebMvcConfigurer{
 
 	public static void main(String[] args) {
 		SpringApplication.run(SuperuserApplication.class, args);
@@ -48,11 +49,16 @@ public class SuperuserApplication extends WebMvcConfigurationSupport{
 	  }
 
 	  @Override
-	  protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-	    registry.addResourceHandler("swagger-ui.html")
-	        .addResourceLocations("classpath:/META-INF/resources/");
+	  public void addViewControllers(ViewControllerRegistry registry) {
+	      registry.addRedirectViewController("/api/v2/api-docs", "/v2/api-docs");
+	      registry.addRedirectViewController("/api/swagger-resources/configuration/ui", "/swagger-resources/configuration/ui");
+	      registry.addRedirectViewController("/api/swagger-resources/configuration/security", "/swagger-resources/configuration/security");
+	      registry.addRedirectViewController("/api/swagger-resources", "/swagger-resources");
+	  }
 
-	    registry.addResourceHandler("/webjars/**")
-	        .addResourceLocations("classpath:/META-INF/resources/webjars/");
+	  @Override
+	  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+	      registry.addResourceHandler("/api/swagger-ui.html**").addResourceLocations("classpath:/META-INF/resources/swagger-ui.html");
+	      registry.addResourceHandler("/api/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 	  }
 }

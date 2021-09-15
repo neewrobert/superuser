@@ -30,7 +30,7 @@ public class UserControllerTest {
 	@InjectMocks()
 	private UserController userController;
 
-	public final String REST_SERVICE_URI = "http://localhost:8081/user";
+	public final String REST_SERVICE_URI = "http://localhost:8081/users";
 
 	@BeforeEach
 	public void setup() {
@@ -45,7 +45,7 @@ public class UserControllerTest {
 
 		String json = "{\"name\":\"John Doe\",\"birthDate\":\"1991-07-28\",\"profileType\":\"manager\",\"phoneNumber\":\"987411289\",\"email\":\"johndoe@gmail.com\"}";
 
-		MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post(REST_SERVICE_URI + "/create")
+		MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post(REST_SERVICE_URI)
 				.accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(json);
 
 		mockMvc.perform(mockRequest).andExpect(MockMvcResultMatchers.status().isCreated());
