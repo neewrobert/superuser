@@ -14,7 +14,6 @@ import com.neewrobert.superuser.controller.UserController;
 import com.neewrobert.superuser.controller.exception.UserAlreadyExistsException;
 import com.neewrobert.superuser.controller.exception.UserNotFoundException;
 import com.neewrobert.superuser.dto.ErrorDto;
-import com.neewrobert.superuser.dto.UserDTO;
 
 @RestControllerAdvice
 public class UserHandler extends RestResponseEntityHandler {
@@ -23,7 +22,7 @@ public class UserHandler extends RestResponseEntityHandler {
 	protected ResponseEntity<ErrorDto> handler(UserNotFoundException ex, WebRequest request) {
 
 		ErrorDto errorDto = new ErrorDto(ex.getMessage(), null, null);
-		Link link = linkTo(methodOn(UserController.class).createUser(new UserDTO())).withSelfRel();
+		Link link = linkTo(UserController.class).withSelfRel();
 		errorDto.add(link);
 
 		return new ResponseEntity<ErrorDto>(errorDto, HttpStatus.NOT_FOUND);
@@ -33,8 +32,9 @@ public class UserHandler extends RestResponseEntityHandler {
 	@ExceptionHandler(value = UserAlreadyExistsException.class)
 	protected ResponseEntity<ErrorDto> handlerUserAlreadyExists(UserAlreadyExistsException ex, WebRequest request) {
 		ErrorDto errorDto = new ErrorDto(ex.getMessage(), null, null);
-
-		errorDto.add(ex.getUserDto().getLinks());
+		Link link = linkTo(methodOn(UserController.class).createUser(ex.getUserDto())).withSelfRel();
+		errorDto.add(link);
+		
 		return new ResponseEntity<ErrorDto>(errorDto, HttpStatus.CONFLICT);
 
 	}

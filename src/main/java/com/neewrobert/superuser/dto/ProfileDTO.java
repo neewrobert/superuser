@@ -1,18 +1,13 @@
 package com.neewrobert.superuser.dto;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.io.Serializable;
 
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-import com.neewrobert.superuser.controller.ProfileController;
 
 public class ProfileDTO extends RepresentationModel<ProfileDTO> implements Serializable {
 
@@ -32,19 +27,11 @@ public class ProfileDTO extends RepresentationModel<ProfileDTO> implements Seria
 	 */
 	public ProfileDTO(String profileType) {
 		this.profileType = profileType;
-		selfLink();
 	}
 
 	public ProfileDTO() {
 	}
 	
-	private void selfLink() {
-		
-		Link link = linkTo(methodOn(ProfileController.class).getProfile(this.getProfileType())).withSelfRel();
-		this.add(link);
-	
-}
-
 
 	/**
 	 * @return the id
@@ -72,7 +59,6 @@ public class ProfileDTO extends RepresentationModel<ProfileDTO> implements Seria
 	 */
 	public void setProfileType(String profileType) {
 		this.profileType = profileType;
-		selfLink();
 	}
 
 }
