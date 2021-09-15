@@ -1,7 +1,7 @@
 package com.neewrobert.superuser.service;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -9,18 +9,19 @@ import javax.validation.constraints.Email;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.neewrobert.superuser.controller.exception.ProfileNotFoundException;
+import com.neewrobert.superuser.assembler.UserAssembler;
 import com.neewrobert.superuser.controller.exception.UserAlreadyExistsException;
 import com.neewrobert.superuser.controller.exception.UserNotFoundException;
 import com.neewrobert.superuser.dto.ProfileDTO;
 import com.neewrobert.superuser.dto.UserDTO;
-import com.neewrobert.superuser.model.Profile;
 import com.neewrobert.superuser.model.User;
 import com.neewrobert.superuser.repository.UserRepository;
 
@@ -35,6 +36,13 @@ public class UserService {
 
 	@Autowired
 	ProfileService profileService;
+	
+	@Autowired
+	UserAssembler userAssembler;
+	
+	@Autowired
+	PagedResourcesAssembler<User> pagedResourcesAssembler;
+	
 
 	@Transactional
 	public UserDTO save(UserDTO dto) {
@@ -46,11 +54,9 @@ public class UserService {
 
 		if (profileDto != null) {
 
-			Optional<Profile> foundProfile = profileService.findProfileByType(profileDto.getProfileType());
-			Profile profileEntity = foundProfile.orElseThrow(() -> new ProfileNotFoundException(
-					String.format("The profile %s does not exists",
-							profileDto.getProfileType())));
-			profileDto.setId(profileEntity.getId());
+			ProfileDTO foundProfile = profileService.findProfileByType(profileDto.getProfileType());
+			
+			profileDto.setId(foundProfile.getId());
 
 		}
 
@@ -58,6 +64,14 @@ public class UserService {
 
 		return modelMapper.map(user, UserDTO.class);
 
+	}
+	
+	public void deleteByEmail(String email) {
+		
+		UserDTO found = this.getUserByEmail(email);
+		
+		userRepository.deleteById(found.getId());
+		
 	}
 
 	public void merge(@Valid UserDTO dto, @Email String email) {
@@ -78,14 +92,22 @@ public class UserService {
 
 	}
 
-	public Page<UserDTO> getAllUsers(int page, int size) {
+	public PagedModel<UserDTO> getAllUsers(int page, int size) {
 
 		Pageable paging = PageRequest.of(page, size);
 
 		Page<User> users = userRepository.findAll(paging);
 
-		return new PageImpl<UserDTO>(
-				users.stream().map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList()));
+		return pagedResourcesAssembler.toModel(users, userAssembler);
+	}
+
+	public CollectionModel<UserDTO> getAllUsersByProfile(String profileType) {
+		
+		
+		Optional<List<User>> usersByProfile = userRepository.findAllUsersByProfile(profileType);
+		
+		
+		return userAssembler.toCollectionModel(usersByProfile.get());
 	}
 
 }

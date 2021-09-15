@@ -6,13 +6,17 @@ import javax.validation.constraints.NotBlank;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 public class ProfileDTO extends RepresentationModel<ProfileDTO> implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6127368895546006824L;
-
+	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private Long id;
 	
 	@NotBlank
@@ -27,6 +31,7 @@ public class ProfileDTO extends RepresentationModel<ProfileDTO> implements Seria
 
 	public ProfileDTO() {
 	}
+	
 
 	/**
 	 * @return the id

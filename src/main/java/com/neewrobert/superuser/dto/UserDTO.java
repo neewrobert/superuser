@@ -1,30 +1,24 @@
 package com.neewrobert.superuser.dto;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import javax.persistence.PostLoad;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.neewrobert.superuser.controller.UserController;
 
 public class UserDTO extends RepresentationModel<UserDTO> implements Serializable {
 
@@ -32,6 +26,9 @@ public class UserDTO extends RepresentationModel<UserDTO> implements Serializabl
 	 * 
 	 */
 	private static final long serialVersionUID = -1307634754249026896L;
+	
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private Long id;
 
 	@NotBlank
 	private String name;
@@ -67,7 +64,6 @@ public class UserDTO extends RepresentationModel<UserDTO> implements Serializabl
 		this.profile = profile;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
-		selfLink();
 	}
 
 	/**
@@ -82,11 +78,18 @@ public class UserDTO extends RepresentationModel<UserDTO> implements Serializabl
 	}
 	
 	
-	private void selfLink() {
-		
-			Link link = linkTo(methodOn(UserController.class).getUser(this.getEmail())).withSelfRel();
-			this.add(link);
-		
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	/**
@@ -157,7 +160,6 @@ public class UserDTO extends RepresentationModel<UserDTO> implements Serializabl
 	 */
 	public void setEmail(String email) {
 		this.email = email;
-		selfLink();
 	}
 
 }
