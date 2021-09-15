@@ -6,14 +6,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import javax.persistence.PostLoad;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
 

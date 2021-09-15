@@ -1,12 +1,14 @@
 package com.neewrobert.superuser.service;
 
-import java.util.Optional;
+import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.neewrobert.superuser.controller.exception.ProfileAlreadyExistsException;
+import com.neewrobert.superuser.controller.exception.ProfileNotFoundException;
+import com.neewrobert.superuser.dto.ProfileDTO;
 import com.neewrobert.superuser.model.Profile;
 import com.neewrobert.superuser.repository.ProfileRepository;
 
@@ -19,12 +21,21 @@ public class ProfileService {
 	@Autowired
 	ProfileRepository profileRepository;
 	
-	@Transactional
-	public Optional<Profile> findProfileByType(String profileType) {
+	public ProfileDTO findProfileByType(String profileType) {
 		
-			Optional<Profile> profile = profileRepository.findProfileByType(profileType);
-			return profile;
+		Profile found = profileRepository.findProfileByType(profileType).orElseThrow(() -> new ProfileNotFoundException(profileType));
 		
+		return modelMapper.map(found, ProfileDTO.class);
+		
+	}
+
+	public ProfileDTO createProfile(@Valid ProfileDTO profile) {
+		
+		profileRepository.findProfileByType(profile.getProfileType()).ifPresent(s -> {throw new ProfileAlreadyExistsException(profile);});
+		
+		Profile saved = profileRepository.save(modelMapper.map(profile, Profile.class));
+		
+		return modelMapper.map(saved, ProfileDTO.class);
 	}
 
 }

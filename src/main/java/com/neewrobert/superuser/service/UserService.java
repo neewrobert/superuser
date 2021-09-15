@@ -1,6 +1,5 @@
 package com.neewrobert.superuser.service;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -15,12 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.neewrobert.superuser.controller.exception.ProfileNotFoundException;
 import com.neewrobert.superuser.controller.exception.UserAlreadyExistsException;
 import com.neewrobert.superuser.controller.exception.UserNotFoundException;
 import com.neewrobert.superuser.dto.ProfileDTO;
 import com.neewrobert.superuser.dto.UserDTO;
-import com.neewrobert.superuser.model.Profile;
 import com.neewrobert.superuser.model.User;
 import com.neewrobert.superuser.repository.UserRepository;
 
@@ -46,11 +43,9 @@ public class UserService {
 
 		if (profileDto != null) {
 
-			Optional<Profile> foundProfile = profileService.findProfileByType(profileDto.getProfileType());
-			Profile profileEntity = foundProfile.orElseThrow(() -> new ProfileNotFoundException(
-					String.format("The profile %s does not exists",
-							profileDto.getProfileType())));
-			profileDto.setId(profileEntity.getId());
+			ProfileDTO foundProfile = profileService.findProfileByType(profileDto.getProfileType());
+			
+			profileDto.setId(foundProfile.getId());
 
 		}
 
