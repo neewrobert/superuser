@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,7 +39,7 @@ public class User implements Serializable {
 	@DateTimeFormat(pattern = "yyyy-MM-dd", iso = ISO.DATE)
 	private LocalDate birthDate;
 
-	@ManyToOne(cascade = CascadeType.MERGE)
+	@ManyToOne(cascade = CascadeType.MERGE, targetEntity=Profile.class, fetch = FetchType.EAGER)
 	@Transient
     @JoinColumn(name = "profile_id")
 	private Profile profile;
