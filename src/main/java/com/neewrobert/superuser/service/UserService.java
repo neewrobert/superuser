@@ -18,10 +18,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.neewrobert.superuser.assembler.UserAssembler;
+import com.neewrobert.superuser.controller.exception.OperationExceptionBuilder;
 import com.neewrobert.superuser.controller.exception.UserAlreadyExistsException;
 import com.neewrobert.superuser.controller.exception.UserNotFoundException;
 import com.neewrobert.superuser.dto.ProfileDTO;
 import com.neewrobert.superuser.dto.UserDTO;
+import com.neewrobert.superuser.mapper.UserMapper;
+import com.neewrobert.superuser.model.Profile;
 import com.neewrobert.superuser.model.User;
 import com.neewrobert.superuser.repository.UserRepository;
 
@@ -36,13 +39,15 @@ public class UserService {
 
 	@Autowired
 	ProfileService profileService;
-	
+
 	@Autowired
 	UserAssembler userAssembler;
-	
+
+	@Autowired
+	OperationExceptionBuilder exceptionBuilder;
+
 	@Autowired
 	PagedResourcesAssembler<User> pagedResourcesAssembler;
-	
 
 	@Transactional
 	public UserDTO save(UserDTO dto) {
@@ -50,37 +55,54 @@ public class UserService {
 		userRepository.findUserIdByEmail(dto.getEmail()).ifPresent(s -> {
 			throw new UserAlreadyExistsException(dto);
 		});
+
 		ProfileDTO profileDto = dto.getProfile();
 
 		if (profileDto != null) {
 
 			ProfileDTO foundProfile = profileService.findProfileByType(profileDto.getProfileType());
-			
+
 			profileDto.setId(foundProfile.getId());
 
 		}
 
 		User user = userRepository.save(modelMapper.map(dto, User.class));
 
-		return modelMapper.map(user, UserDTO.class);
+		return userAssembler.toModel(user);
 
 	}
-	
+
 	public void deleteByEmail(String email) {
-		
+
 		UserDTO found = this.getUserByEmail(email);
-		
+
 		userRepository.deleteById(found.getId());
-		
+
 	}
 
-	public void merge(@Valid UserDTO dto, @Email String email) {
+	@Transactional
+	public UserDTO merge(@Valid UserDTO dto, @Email String email) {
 
-		Long foundId = userRepository.findUserIdByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+		User foundUser = userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
 
-		User user = modelMapper.map(dto, User.class);
-		user.setId(foundId);
-		userRepository.save(user);
+		// it's not possible to change an email thats already has been using by another
+		// user
+		if(!dto.getEmail().equals(email)) {
+			userRepository.findUserByEmail(dto.getEmail()).ifPresent(u -> {throw exceptionBuilder.build("exception.msg.email.notpermited");});
+		}
+		
+
+		ProfileDTO profileDto = dto.getProfile();
+
+		if (profileDto != null) {
+
+			ProfileDTO foundProfile = profileService.findProfileByType(profileDto.getProfileType());
+			foundUser.setProfile(modelMapper.map(foundProfile, Profile.class));
+
+		}
+
+		UserMapper.mapDtoToEntityNonNullfields(dto, foundUser);
+		return userAssembler.toModel(userRepository.save(foundUser));
 
 	}
 
@@ -88,7 +110,7 @@ public class UserService {
 
 		User userFound = userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
 
-		return modelMapper.map(userFound, UserDTO.class);
+		return userAssembler.toModel(userFound);
 
 	}
 
@@ -102,11 +124,9 @@ public class UserService {
 	}
 
 	public CollectionModel<UserDTO> getAllUsersByProfile(String profileType) {
-		
-		
+
 		Optional<List<User>> usersByProfile = userRepository.findAllUsersByProfile(profileType);
-		
-		
+
 		return userAssembler.toCollectionModel(usersByProfile.get());
 	}
 
