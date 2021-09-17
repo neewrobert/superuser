@@ -12,5 +12,5 @@ RUN mvn -f /usr/src/superuser/pom.xml clean package
 #
 FROM gcr.io/distroless/java  
 COPY --from=build /usr/src/superuser/target/superuser-*.jar /usr/app/superuser.jar  
-EXPOSE 8080  
+EXPOSE 8081
 ENTRYPOINT ["java","-jar","/usr/app/superuser.jar"]
