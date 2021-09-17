@@ -24,5 +24,5 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
 	@Query(" SELECT u FROM User u JOIN u.profile p WHERE p.profileType = :profileType")
 	public Optional<List<User>> findAllUsersByProfile(@Param("profileType") String profileType);
-
+	
 }

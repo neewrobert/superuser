@@ -6,7 +6,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
@@ -19,11 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.neewrobert.superuser.dto.ProfileDTO;
 import com.neewrobert.superuser.dto.UserDTO;
 import com.neewrobert.superuser.service.UserService;
 
@@ -50,11 +47,11 @@ public class UserController implements Serializable {
 
 	@ApiOperation(value = "Update User")
 	@PutMapping("users/{email}")
-	public ResponseEntity<String> updateUser(@Valid @RequestBody UserDTO userDto, @PathVariable @Email String email) {
+	public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDto, @PathVariable @Email String email) {
 
-		userService.merge(userDto, email);
+		UserDTO updated = userService.merge(userDto, email);
 
-		return new ResponseEntity<String>(HttpStatus.ACCEPTED);
+		return new ResponseEntity<UserDTO>(updated, HttpStatus.ACCEPTED);
 	}
 
 	@ApiOperation(value = "Get User")

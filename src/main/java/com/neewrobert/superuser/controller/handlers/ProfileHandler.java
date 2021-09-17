@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import com.neewrobert.superuser.controller.ProfileController;
+import com.neewrobert.superuser.controller.exception.OperationException;
 import com.neewrobert.superuser.controller.exception.ProfileAlreadyExistsException;
 import com.neewrobert.superuser.controller.exception.ProfileNotFoundException;
 import com.neewrobert.superuser.dto.ErrorDto;
@@ -33,6 +34,14 @@ public class ProfileHandler extends RestResponseEntityHandler {
 		ErrorDto errorDto = new ErrorDto(ex.getMessage(), null, null);
 
 		return new ResponseEntity<ErrorDto>(errorDto, HttpStatus.CONFLICT);
+
+	}
+	
+	@ExceptionHandler(value = OperationException.class)
+	protected ResponseEntity<ErrorDto> handlerOperationException(OperationException ex, WebRequest request) {
+		ErrorDto errorDto = new ErrorDto(ex.getMessage(), null, null);
+
+		return new ResponseEntity<ErrorDto>(errorDto, HttpStatus.BAD_REQUEST);
 
 	}
 }
