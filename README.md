@@ -14,12 +14,12 @@ to run the project:
 
 To build the image:
 
-	```sh
+	```
 	docker build -t superuser . 
 	```
 Then, run:
 	
-	```sh
+	```
 	run --rm -p 8081:8081 -it superuser:latest 
 	```
 
