@@ -4,7 +4,7 @@
 
 ## Description
 
-The propose of this project is improve some knowlegements and do some experiences
+The propose of this project is improve some knowledges and do some experiences
 
 ## Getting Started
 
@@ -32,6 +32,8 @@ Then, run:
 ```
 
  http://localhost:8081/superuser/api/swagger-ui.html
+ 
+ [![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/3569107/UUxwC8j2)
 
 ## About
 
@@ -48,44 +50,6 @@ Then, run:
   
   HATEOAS was implement to make the APIs RestFul
   
-## Playground
-
-At first you will need to create a profile
-
-### Profile
-
-`CREATE PROFILE - POST` [/profiles](#post) <br/>
-  
-```
-{
-    "profileType": "manager"
-}
-```
-
-`GET PROFILE - GET` [/profiles/{profileType}](#post) <br/>
-`DELETE PROFILE - DELETE` [/profiles/{profileType}](#post) <br/>
-`GET ALL PROFILE (paginated) - GET` [/profiles?page=3&size=1](#post) <br/>
-
-### Users
-
-`CREATE USER - POST` [/users](#post) <br/>
-  
-```
-{
-    "name": "Jose Doe",
-    "birthDate": "1991-07-28",
-    "profile": {
-        "profileType": "manager"
-    },
-    "phoneNumber": "111",
-    "email": "jose@gmail.com"
-}
-```
-
-`GET USER - GET` [/users/{email}](#post) <br/>
-`DELETE USER - DELETE` [/users/{email}](#post) <br/>
-`GET ALL USERS (paginated) - GET` [/users?page=3&size=1](#post) <br/>
-`GET ALL USERS by PROFILE - GET` [/profiles/{profileType}/users](#post) <br/>
 
 
 ## NEXT FEATURES

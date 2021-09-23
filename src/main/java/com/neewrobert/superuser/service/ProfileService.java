@@ -11,6 +11,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import com.neewrobert.superuser.assembler.ProfileAssembler;
+import com.neewrobert.superuser.controller.exception.OperationExceptionBuilder;
 import com.neewrobert.superuser.controller.exception.ProfileAlreadyExistsException;
 import com.neewrobert.superuser.controller.exception.ProfileNotFoundException;
 import com.neewrobert.superuser.dto.ProfileDTO;
@@ -30,7 +31,14 @@ public class ProfileService {
 	ProfileRepository profileRepository;
 	
 	@Autowired
+	UserService userService;
+	
+	@Autowired
+	OperationExceptionBuilder exceptionBuilder;
+	
+	@Autowired
 	private PagedResourcesAssembler<Profile> pagedResourcesAssembler;
+	
 	
 	public ProfileDTO findProfileByType(String profileType) {
 		
@@ -60,6 +68,10 @@ public class ProfileService {
 	public void deleteByType(String profileType) {
 		
 		ProfileDTO found = this.findProfileByType(profileType);
+		
+		if(!userService.getAllUsersByProfile(profileType).getContent().isEmpty()) {
+			throw exceptionBuilder.build("exception.msg.profile.inuse");
+		}
 		
 		profileRepository.deleteById(found.getId());
 		

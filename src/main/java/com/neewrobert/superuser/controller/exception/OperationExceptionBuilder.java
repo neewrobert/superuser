@@ -2,9 +2,9 @@ package com.neewrobert.superuser.controller.exception;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class OperationExceptionBuilder {
 
 	@Autowired
