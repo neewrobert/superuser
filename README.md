@@ -14,14 +14,14 @@ to run the project:
 
 To build the image:
 
-	```sh
-	docker build -t superuser . 
-	```
+```sh
+ docker build -t superuser . 
+```
 Then, run:
 	
-	```sh
-	run --rm -p 8081:8081 -it superuser:latest 
-	```
+```sh
+ run --rm -p 8081:8081 -it superuser:latest 
+```
 
 **The build will takes some time to build, because I decide to crate a building step at dockerfile. This is not the best approach. Normally, in a regular pipeline you need to have a step to build then, in your dockerfile, we need to have just the 'run' step. But, for this study propose, I see no problem
 
