@@ -51,7 +51,7 @@ public class UserController implements Serializable {
 
 		UserDTO updated = userService.merge(userDto, email);
 
-		return new ResponseEntity<UserDTO>(updated, HttpStatus.ACCEPTED);
+		return new ResponseEntity<UserDTO>(updated, HttpStatus.CREATED);
 	}
 
 	@ApiOperation(value = "Get User")
