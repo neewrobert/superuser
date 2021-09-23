@@ -7,13 +7,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.neewrobert.superuser.controller.ProfileController;
 import com.neewrobert.superuser.dto.ProfileDTO;
 import com.neewrobert.superuser.model.Profile;
 
-@Component
+@Service
 public class ProfileAssembler  extends RepresentationModelAssemblerSupport<Profile, ProfileDTO>{
 	
 	
@@ -31,7 +31,6 @@ public class ProfileAssembler  extends RepresentationModelAssemblerSupport<Profi
 		
 		ProfileDTO dto = modelMapper.map(profile, ProfileDTO.class);
 		dto.add(linkTo(methodOn(ProfileController.class).getProfile(profile.getProfileType())).withSelfRel());
-		
 		return dto;
 	}
 	

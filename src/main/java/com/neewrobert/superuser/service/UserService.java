@@ -124,7 +124,7 @@ public class UserService {
 	}
 
 	public CollectionModel<UserDTO> getAllUsersByProfile(String profileType) {
-
+		
 		Optional<List<User>> usersByProfile = userRepository.findAllUsersByProfile(profileType);
 
 		return userAssembler.toCollectionModel(usersByProfile.get());

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.neewrobert.superuser.dto.ProfileDTO;
@@ -67,8 +69,11 @@ public class ProfileController implements Serializable {
 
 	@ApiOperation(value = "Get All Profiles")
 	@GetMapping(path = "/profiles", produces = { "application/hal+json" })
-	public ResponseEntity<PagedModel<ProfileDTO>> getAllProfiles(Pageable paging) {
-
+	public ResponseEntity<PagedModel<ProfileDTO>> getAllProfiles(
+			@RequestParam(defaultValue = "0") int page,
+	        @RequestParam(defaultValue = "3") int size) {
+		
+		Pageable paging = PageRequest.of(page, size);
 		PagedModel<ProfileDTO> profiles = profileService.getAllProfiles(paging);
 
 		if (profiles.getMetadata().getTotalElements() == 0) {
